@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./menu-sidebar.component.scss']
 })
 export class MenuSidebarComponent {
+  isDropdownOpen = false;
 
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
 }
