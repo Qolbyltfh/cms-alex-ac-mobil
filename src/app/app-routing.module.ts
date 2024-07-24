@@ -6,6 +6,9 @@ import { MainComponent } from './modules/main/main.component';
 import { LoginComponent } from './modules/login/login.component';
 import { BlankComponent } from './pages/blank/blank.component';
 
+// pages
+import { CustomersComponent } from './pages/customers/customers.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -14,6 +17,10 @@ const routes: Routes = [
       {
         path: 'blank',
         component: BlankComponent
+      },
+      {
+        path: 'customers',
+        component: CustomersComponent
       },
     ]
   },

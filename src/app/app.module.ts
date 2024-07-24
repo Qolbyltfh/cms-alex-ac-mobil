@@ -13,6 +13,7 @@ import { ControlSidebarComponent } from './modules/main/control-sidebar/control-
 // Plugins
 import {ToastrModule} from 'ngx-toastr';
 import { BlankComponent } from './pages/blank/blank.component';
+import { CustomersComponent } from './pages/customers/customers.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BlankComponent } from './pages/blank/blank.component';
     MenuSidebarComponent,
     FooterComponent,
     ControlSidebarComponent,
-    BlankComponent
+    BlankComponent,
+    CustomersComponent
   ],
   imports: [
     BrowserModule,
