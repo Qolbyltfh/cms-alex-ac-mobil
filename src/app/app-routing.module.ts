@@ -8,6 +8,7 @@ import { BlankComponent } from './pages/blank/blank.component';
 
 // pages
 import { CustomersComponent } from './pages/customers/customers.component';
+import { AdministratorComponent } from './pages/administrator/administrator.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: 'customers',
         component: CustomersComponent
+      },
+      {
+        path: 'administrator',
+        component: AdministratorComponent
       },
     ]
   },
