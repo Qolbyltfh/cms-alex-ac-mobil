@@ -9,6 +9,7 @@ import { BlankComponent } from './pages/blank/blank.component';
 // pages
 import { CustomersComponent } from './pages/customers/customers.component';
 import { AdministratorComponent } from './pages/administrator/administrator.component';
+import { EmployeeComponent } from './pages/employee/employee.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: 'administrator',
         component: AdministratorComponent
+      },
+      {
+        path: 'employee',
+        component: EmployeeComponent
       },
     ]
   },

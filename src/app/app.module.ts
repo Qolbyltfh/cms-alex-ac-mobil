@@ -15,6 +15,7 @@ import {ToastrModule} from 'ngx-toastr';
 import { BlankComponent } from './pages/blank/blank.component';
 import { CustomersComponent } from './pages/customers/customers.component';
 import { AdministratorComponent } from './pages/administrator/administrator.component';
+import { EmployeeComponent } from './pages/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AdministratorComponent } from './pages/administrator/administrator.comp
     ControlSidebarComponent,
     BlankComponent,
     CustomersComponent,
-    AdministratorComponent
+    AdministratorComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
