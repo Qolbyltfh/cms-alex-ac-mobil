@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,7 @@ import { ControlSidebarComponent } from './modules/main/control-sidebar/control-
 // Plugins
 import {ToastrModule} from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxSummernoteModule } from 'ngx-summernote';
 
 // pages
 import { BlankComponent } from './pages/blank/blank.component';
@@ -42,6 +44,8 @@ import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-w
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    NgxSummernoteModule,
+    HttpClientModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
