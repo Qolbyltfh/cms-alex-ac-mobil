@@ -12,6 +12,9 @@ import { ControlSidebarComponent } from './modules/main/control-sidebar/control-
 
 // Plugins
 import {ToastrModule} from 'ngx-toastr';
+import { ReactiveFormsModule } from '@angular/forms';
+
+// pages
 import { BlankComponent } from './pages/blank/blank.component';
 import { CustomersComponent } from './pages/customers/customers.component';
 import { AdministratorComponent } from './pages/administrator/administrator.component';
@@ -38,6 +41,7 @@ import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-w
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
