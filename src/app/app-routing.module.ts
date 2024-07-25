@@ -11,6 +11,7 @@ import { CustomersComponent } from './pages/customers/customers.component';
 import { AdministratorComponent } from './pages/administrator/administrator.component';
 import { EmployeeComponent } from './pages/employee/employee.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-workbrench.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: 'orders',
         component: OrdersComponent
+      },
+      {
+        path: 'company-workbrench',
+        component: CompanyWorkbrenchComponent
       },
     ]
   },

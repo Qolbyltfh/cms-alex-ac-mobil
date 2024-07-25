@@ -17,6 +17,7 @@ import { CustomersComponent } from './pages/customers/customers.component';
 import { AdministratorComponent } from './pages/administrator/administrator.component';
 import { EmployeeComponent } from './pages/employee/employee.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-workbrench.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { OrdersComponent } from './pages/orders/orders.component';
     CustomersComponent,
     AdministratorComponent,
     EmployeeComponent,
-    OrdersComponent
+    OrdersComponent,
+    CompanyWorkbrenchComponent
   ],
   imports: [
     BrowserModule,
