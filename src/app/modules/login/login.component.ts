@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
+
+import { AccountService } from '../../services/account.service'
 
 
 @Component({
@@ -9,20 +13,57 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  form!: FormGroup;
+    loading = false;
+    submitted = false;
+    error?: string;
+
   constructor(
-    private toastr: ToastrService,
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
+    private accountService: AccountService
   ) {
-    
+    // redirect to home if already logged in
+    if (this.accountService.userValue) {
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnInit() {
-
+    this.form = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
-  login(){
-    // redirect to home if already logged in
-    this.router.navigate(['/']);
+  // convenience getter for easy access to form fields
+  get f() { return this.form.controls; }
 
+  onSubmit() {
+    this.submitted = true;
+
+    // reset alert on submit
+    this.error = '';
+
+    // stop here if form is invalid
+    if (this.form.invalid) {
+        return;
+    }
+
+    this.loading = true;
+    this.accountService.login(this.f['email'].value, this.f['password'].value)
+        .pipe(first())
+        .subscribe({
+            next: () => {
+                // get return url from query parameters or default to home page
+                this.router.navigateByUrl('/');
+            },
+            error: error => {
+                this.error = error;
+                this.loading = false;
+            }
+        });
   }
+
 }
