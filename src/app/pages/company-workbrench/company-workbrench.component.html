@@ -12,79 +12,33 @@
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mb-4">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3 text-center"> No </th>
                             <th scope="col" class="px-6 py-3 text-center"> Image </th>
                             <th scope="col" class="px-6 py-3 text-center"> Name </th>
                             <th scope="col" class="px-6 py-3 text-center"> Address </th>
-                            <th scope="col" class="px-6 py-3 text-center"> Supervisor </th>
                             <th scope="col" class="px-6 py-3 text-center"> Phone </th>
                             <th scope="col" class="px-6 py-3 text-center"> Working Hours </th>
                             <th scope="col" class="px-6 py-3 text-center"> Action </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <tr *ngFor="let data of list_data; index as i" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="text-center align-middle">{{ checkNumberList(i) }}</td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
                                 <div class="flex justify-center items-center">
-                                    <img class="max-w-full max-h-60 object-contain" src="../../../assets/img/workbrench-1.png" alt="user photo">
+                                    <img class="max-w-full max-h-60 object-contain" src="{{ data.image }}" alt="user photo">
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-center"> ALEX AC MOBIL SEMARANG 1 </td>
-                            <td class="px-6 py-4 text-center"> Jl. Supriyadi No.25, Kalicari, Kec. Pedurungan, Kota Semarang, Jawa Tengah 50198 </td>
-                            <td class="px-6 py-4 text-center"> Marini Alya </td>
-                            <td class="px-6 py-4 text-center"> 085174451513 </td>
-                            <td class="px-6 py-4 text-center"> 08.00 - 17.00 </td>
+                            <td class="px-6 py-4 text-center"> {{ data.name || '-' }} </td>
+                            <td class="px-6 py-4 text-center"> {{ data.address || '-' }} </td>
+                            <td class="px-6 py-4 text-center"> {{ data.phone || '-' }} </td>
+                            <td class="px-6 py-4 text-center"> {{ formatTime(data.open_time) || '-' }} - {{ formatTime(data.close_time) || '-' }}</td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-center items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('edit',null)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('edit',data)">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                     </svg>     
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('assign_holiday',null)">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
-                                      </svg>                                                                        
-                                </div>
-                            </td>
-                            
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                                <div class="flex justify-center items-center">
-                                    <img class="max-w-full max-h-60 object-contain" src="../../../assets/img/workbrench-2.jpg" alt="user photo">
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-center"> ALEX AC MOBIL SEMARANG 2 </td>
-                            <td class="px-6 py-4 text-center"> Jl. Kedungmundu No.101, Tandang, Kec. Tembalang, Kota Semarang, Jawa Tengah 89101 </td>
-                            <td class="px-6 py-4 text-center"> Marini Alya </td>
-                            <td class="px-6 py-4 text-center"> 085174257445 </td>
-                            <td class="px-6 py-4 text-center"> 08.00 - 17.00 </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-center items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('edit',null)">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                    </svg>     
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('assign_holiday',null)">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
-                                      </svg>                                                                        
-                                </div>
-                            </td>
-                            
-                        </tr>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
-                                <div class="flex justify-center items-center">
-                                    <img class="max-w-full max-h-60 object-contain" src="../../../assets/img/workbrench-3.jpg" alt="user photo">
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-center"> ALEX AC MOBIL SEMARANG 3 </td>
-                            <td class="px-6 py-4 text-center"> Jl. Wr. Supratman No.44, Ngemplak Simongan, Kec. Semarang Barat, Kota Semarang, Jawa Tengah 50148 </td>
-                            <td class="px-6 py-4 text-center"> Marini Alya </td>
-                            <td class="px-6 py-4 text-center"> 081398626627 </td>
-                            <td class="px-6 py-4 text-center"> 08.00 - 17.00 </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-center items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('edit',null)">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                    </svg>     
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('assign_holiday',null)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" (click)="openModal('assign_holiday',data)">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
                                       </svg>                                                                        
                                 </div>
@@ -93,7 +47,9 @@
                         </tr>
                     </tbody>
                 </table>
-                <app-pagination></app-pagination>
+                <app-pagination>
+                </app-pagination>
+
 
             </div>
         </div>
@@ -162,7 +118,7 @@
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Description</label
             >
-            <div [ngxSummernote]="config"></div>
+            <div [ngxSummernote]="configSummernote"></div>
           </div>
 
           <div class="col-span-2">

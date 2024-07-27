@@ -28,7 +28,6 @@ export class AccountService {
   }
 
   login(emailOrPhone: string, password: string) {
-    console.log('masuk')
       return this.http.post<User>(`${environment.apiUrl}/auth/login`, { emailOrPhone, password })
           .pipe(map(user => {
               // store user details and jwt token in local storage to keep user logged in between page refreshes
