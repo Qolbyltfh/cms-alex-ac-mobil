@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CompanyWorkbrenchService } from 'src/app/services/company-workbrench.service';
 
 import { CompanyWorkbrench, ApiResponse } from 'src/app/models/api-models';
+import { Helpers } from '../../helpers/helpers';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-company-workbrench',
@@ -12,13 +15,16 @@ import { CompanyWorkbrench, ApiResponse } from 'src/app/models/api-models';
 export class CompanyWorkbrenchComponent implements OnInit{
   isModalOpen = false; // Track modal open state
   isModalOpenHoliday = false; // Track modal open state
+  isEdit = false;
+  id_detail = '';
+  data_detail = {};
+  tempImage = '';
 
   title = '';
-
   //summernote
   configSummernote = {};
 
-  formCW: FormGroup;
+  formCW!: FormGroup;
   list_data: CompanyWorkbrench[] = [];
   currentPage: number = 1;
   totalPages: any;
@@ -30,10 +36,7 @@ export class CompanyWorkbrenchComponent implements OnInit{
     offset: 0
   };
 
-  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService) {
-    this.formCW = this.fb.group({
-      items: this.fb.array([])
-    });
+  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService, private helpers: Helpers, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -58,7 +61,6 @@ export class CompanyWorkbrenchComponent implements OnInit{
 
     this.companyworkbrenchService.getCompanyWorkbrenches(payloadListData).subscribe({
       next: (res) => {
-        console.log(res);
         if (res) {
           this.list_data = res.data;
           this.config = {
@@ -69,10 +71,13 @@ export class CompanyWorkbrenchComponent implements OnInit{
           };
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        } else {
+          this.toastr.warning('Tidak ada data', 'Peringatan!');
         }
       },
       error: (err) => {
         console.error(err);
+        this.toastr.error('Gagal mendapatkan data', 'Kesalahan!');
       }
     });
   }
@@ -91,33 +96,69 @@ export class CompanyWorkbrenchComponent implements OnInit{
     this.isModalOpen = !this.isModalOpen;
   }
 
-  openModal(type: string, id: any) {
+  configWYSWYG(){
+    this.configSummernote = {
+      tabsize: 2,
+      height: '200px',
+      // uploadImagePath: '/api/upload',
+      toolbar: [
+          ['misc', ['codeview', 'undo', 'redo']],
+          ['style', ['bold', 'italic', 'underline', 'clear']],
+          ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+          ['fontsize', ['fontname', 'fontsize', 'color']],
+          ['para', ['style', 'ul', 'ol', 'paragraph', 'height']],
+          ['insert', ['table', 'picture', 'link', 'video', 'hr']]
+      ],
+      fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
+    }
+  }
+
+  createForm() {
+    this.formCW = new FormGroup({
+      id: new FormControl(null),
+      name: new FormControl(null, Validators.required),
+      description: new FormControl(null),
+      address: new FormControl(null, Validators.required),
+      phone: new FormControl(null, Validators.required),
+      image: new FormControl(null, Validators.required),
+      open_time: new FormControl(null, Validators.required),
+      close_time: new FormControl(null, Validators.required),
+      lat: new FormControl(null, Validators.required),
+      long: new FormControl(null, Validators.required),
+    });
+  }
+
+
+  openModal(type: string, data: any) {
     this.title = this.getFormattedTitle(type);
+    this.tempImage = '';
 
     if (type === 'assign_holiday'){
       this.isModalOpenHoliday = true;
+      this.formCW = this.fb.group({
+        items: this.fb.array([])
+      });
       this.addItem();
     } else {
-      this.isModalOpen = true;
+      this.isEdit = false;
 
-      this.configSummernote = {
-        tabsize: 2,
-        height: '200px',
-        // uploadImagePath: '/api/upload',
-        toolbar: [
-            ['misc', ['codeview', 'undo', 'redo']],
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-            ['fontsize', ['fontname', 'fontsize', 'color']],
-            ['para', ['style', 'ul', 'ol', 'paragraph', 'height']],
-            ['insert', ['table', 'picture', 'link', 'video', 'hr']]
-        ],
-        fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
+      this.configWYSWYG();
+      this.createForm();
+
+
+      if (type === 'edit'){
+        this.isEdit = true;
+        this.id_detail = data.id;
+        this.data_detail = data;
+        this.formCW.patchValue(this.data_detail);
+        this.tempImage = data.image;
       }
+      this.isModalOpen = true;
     }
   }
 
   closeModal() {
+    this.isEdit = false;
     if (this.isModalOpen) {
       this.isModalOpen = false;
     } else {
@@ -127,6 +168,12 @@ export class CompanyWorkbrenchComponent implements OnInit{
 
   getFormattedTitle(title: string): string {
     return title.replace(/_/g, ' ');
+  }
+
+  generateGoogleMapsLink(lat: string | number, long: string | number): string {
+    const latitude = Number(lat);
+    const longitude = Number(long);
+    return `https://www.google.com/maps?q=${latitude},${longitude}`;
   }
 
   get items(): FormArray {
@@ -148,9 +195,106 @@ export class CompanyWorkbrenchComponent implements OnInit{
     }
   }
 
-  onSubmit(): void {
-    if (this.formCW.valid) {
-      console.log(this.formCW.value);
+  get f() { return this.formCW.controls; };
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      this.companyworkbrenchService.uploadImage(formData).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            // Store the image URL in the form control
+            this.tempImage = res.data.link;
+            this.formCW.patchValue({ image: res.data.link });
+            console.log('Image uploaded successfully, URL:', res.data.link);
+          } else {
+            console.error('Image upload failed');
+          }
+        },
+        error: (err) => {
+          console.error('Error uploading image', err);
+        }
+      });
     }
   }
+
+  onSubmit(type: string): void {
+    this.formCW.markAllAsTouched();
+    if (this.formCW.valid) {
+      if (type === 'assign_holiday'){
+
+      } else {
+        const day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  
+        let payloadData = this.helpers.copyObject(this.formCW.getRawValue());
+        
+        // constant day
+        payloadData.day = day;
+
+        if (!this.isEdit){
+          this.companyworkbrenchService.createCompanyWOrkbrench(payloadData).subscribe({
+            next: (res) => {
+              this.closeModal();
+              this,this.getCompanyWorkbrenches(1);
+              console.log('Company Workbrench updated successfully', res);
+              this.toastr.success('Berhasil menambahkan data', 'Berhasil!');
+            },
+            error: (err) => {
+              console.error('Error updating Company Workbrench', err);
+              this.toastr.error('Gagal menambah data', 'Kesalahan!');
+            }
+          });
+        } else {
+          this.companyworkbrenchService.updateCompanyWOrkbrench(payloadData, this.id_detail).subscribe({
+            next: (res) => {
+              this.closeModal();
+              this,this.getCompanyWorkbrenches(1);
+              console.log('Company Workbrench updated successfully', res);
+              this.toastr.success('Berhasil mengubah data', 'Berhasil!');
+            },
+            error: (err) => {
+              console.error('Error updating Company Workbrench', err);
+              this.toastr.error('Gagal mengubah data', 'Kesalahan!');
+
+            }
+          });
+        }
+      }
+    }
+  }
+
+  getFormControl(name: string) {
+    return this.formCW.controls[name];
+  }
+
+  checkErrorFormControl(name: string) {
+    return this.helpers.checkErrorFormControl(this.getFormControl(name));
+  }
+
+  showErrorFormControl(name: string) {
+    return this.helpers.showErrorFormControl(this.getFormControl(name));
+  }
+  
+  // pattern
+  preventNonNumeric(event: KeyboardEvent) {
+    const keyCode = event.which ? event.which : event.keyCode;
+    const keyValue = String.fromCharCode(keyCode);
+    
+    if (!/^[0-9]*$/.test(keyValue) && keyCode !== 8 && keyCode !== 46) {
+      event.preventDefault();
+    }
+  }
+  
+  preventNonNumericPaste(event: ClipboardEvent) {
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('Text');
+    
+    if (!/^[0-9]*$/.test(pastedText)) {
+      event.preventDefault();
+    }
+  }
+  
 }

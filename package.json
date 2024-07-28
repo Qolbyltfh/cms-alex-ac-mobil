@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15.0.0",
+    "@angular/animations": "^15.2.10",
     "@angular/common": "^15.0.0",
     "@angular/compiler": "^15.0.0",
     "@angular/core": "^15.0.0",
@@ -20,7 +20,7 @@
     "@angular/router": "^15.0.0",
     "jquery": "^3.7.1",
     "ngx-summernote": "^1.0.0",
-    "ngx-toastr": "^16.0.1",
+    "ngx-toastr": "^16.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

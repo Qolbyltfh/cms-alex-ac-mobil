@@ -31,7 +31,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/summernote/dist/summernote-lite.min.css"
+              "node_modules/summernote/dist/summernote-lite.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

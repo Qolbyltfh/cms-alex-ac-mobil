@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { JwtInterceptor, ErrorInterceptor } from './helpers';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -45,6 +46,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     NgxSummernoteModule,
@@ -52,10 +54,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
-      preventDuplicates: true,
-      newestOnTop: true,
-      maxOpened: 1,
-      messageClass: 'toast-message pre-line'
+      preventDuplicates: true
   }),
   ],
   providers: [
