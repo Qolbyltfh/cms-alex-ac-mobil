@@ -38,4 +38,12 @@ export class CompanyWorkbrenchService {
   uploadImage(data: any) {
     return this.http.post(`${this.base_URL}/utils/upload/image`, data);
   }
+
+  deleteCompanyWOrkbrench(id: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.delete(`${this.base_URL}/carshops/${id}`, httpOptions);
+  }
 }

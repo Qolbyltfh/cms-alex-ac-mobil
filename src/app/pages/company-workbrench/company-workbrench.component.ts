@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 export class CompanyWorkbrenchComponent implements OnInit{
   isModalOpen = false; // Track modal open state
   isModalOpenHoliday = false; // Track modal open state
+  isConfirmDelete = false;
   isEdit = false;
   id_detail = '';
   data_detail = {};
@@ -132,6 +133,7 @@ export class CompanyWorkbrenchComponent implements OnInit{
   openModal(type: string, data: any) {
     this.title = this.getFormattedTitle(type);
     this.tempImage = '';
+    this.id_detail = data.id;
 
     if (type === 'assign_holiday'){
       this.isModalOpenHoliday = true;
@@ -148,7 +150,6 @@ export class CompanyWorkbrenchComponent implements OnInit{
 
       if (type === 'edit'){
         this.isEdit = true;
-        this.id_detail = data.id;
         this.data_detail = data;
         this.formCW.patchValue(this.data_detail);
         this.tempImage = data.image;
@@ -238,26 +239,26 @@ export class CompanyWorkbrenchComponent implements OnInit{
           this.companyworkbrenchService.createCompanyWOrkbrench(payloadData).subscribe({
             next: (res) => {
               this.closeModal();
-              this,this.getCompanyWorkbrenches(1);
+              this.getCompanyWorkbrenches(1);
               console.log('Company Workbrench updated successfully', res);
-              this.toastr.success('Berhasil menambahkan data', 'Berhasil!');
+              this.toastr.success('Successfully added data', 'Berhasil!');
             },
             error: (err) => {
               console.error('Error updating Company Workbrench', err);
-              this.toastr.error('Gagal menambah data', 'Kesalahan!');
+              this.toastr.error('Failed to added data', 'Kesalahan!');
             }
           });
         } else {
           this.companyworkbrenchService.updateCompanyWOrkbrench(payloadData, this.id_detail).subscribe({
             next: (res) => {
               this.closeModal();
-              this,this.getCompanyWorkbrenches(1);
+              this.getCompanyWorkbrenches(1);
               console.log('Company Workbrench updated successfully', res);
-              this.toastr.success('Berhasil mengubah data', 'Berhasil!');
+              this.toastr.success('Successfully updated data', 'Berhasil!');
             },
             error: (err) => {
               console.error('Error updating Company Workbrench', err);
-              this.toastr.error('Gagal mengubah data', 'Kesalahan!');
+              this.toastr.error('Failed to updated data', 'Kesalahan!');
 
             }
           });
@@ -295,6 +296,32 @@ export class CompanyWorkbrenchComponent implements OnInit{
     if (!/^[0-9]*$/.test(pastedText)) {
       event.preventDefault();
     }
+  }
+
+  // delete
+  confirmDelete(id: string){
+    this.isConfirmDelete = true;
+    this.id_detail = id;
+  }
+
+  closeConfirm(){
+    this.isConfirmDelete = false;
+  }
+
+  delete(){
+    this.companyworkbrenchService.deleteCompanyWOrkbrench(this.id_detail).subscribe({
+      next: (res) => {
+        this.closeConfirm();
+        this.getCompanyWorkbrenches(1);
+        console.log('Company Workbrench deleted successfully', res);
+        this.toastr.success('Successfully deleted data', 'Success!');
+      },
+      error: (err) => {
+        console.error('Error updating Company Workbrench', err);
+        this.toastr.error('Failed to update data', 'Error!');
+
+      }
+    });
   }
   
 }
