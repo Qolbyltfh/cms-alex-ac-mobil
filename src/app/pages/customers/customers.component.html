@@ -44,6 +44,7 @@
             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
           >
             <tr>
+              <th scope="col" class="px-6 py-3 text-center">No</th>
               <th scope="col" class="px-6 py-3 text-center">Image</th>
               <th scope="col" class="px-6 py-3 text-center">Customer Name</th>
               <th scope="col" class="px-6 py-3 text-center">Phone</th>
@@ -144,7 +145,7 @@
             <div class="col-span-1 flex items-center justify-center">
               <img
                 class="w-24 h-24 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                src="{{ detail_data.image }}"
                 alt="user photo"
               />
             </div>
@@ -153,19 +154,19 @@
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
                   <strong>Customer Name:</strong>
                 </p>
-                <p class="text-sm text-gray-900 dark:text-white">Jhon Doe</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ detail_data.name  || '-' }}</p>
               </div>
               <div class="grid grid-cols-2">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
                   <strong>Phone:</strong>
                 </p>
-                <p class="text-sm text-gray-900 dark:text-white">90890128391</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ detail_data.phone || '-'}}</p>
               </div>
               <div class="grid grid-cols-2">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
                   <strong>Status:</strong>
                 </p>
-                <p class="text-sm text-gray-900 dark:text-white">Active</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ detail_data.status || '-'}}</p>
               </div>
             </div>
           </div>
@@ -192,7 +193,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
+                <tr *ngFor="let car of detail_data.cars; index as j"
                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <td
@@ -201,14 +202,14 @@
                     <div class="flex justify-center items-center">
                       <img
                         class="max-w-full max-h-40 object-contain"
-                        src="../../../assets/img/car1.jpg"
+                        src="{{ car.image }}"
                         alt="user photo"
                       />
                     </div>
                   </td>
-                  <td class="px-6 py-4 text-center">Brio</td>
-                  <td class="px-6 py-4 text-center">D 1234 SAE</td>
-                  <td class="px-6 py-4 text-center">2021</td>
+                  <td class="px-6 py-4 text-center">{{ car.name || '-'}}</td>
+                  <td class="px-6 py-4 text-center">{{ car.plat_number || '-'}}</td>
+                  <td class="px-6 py-4 text-center">{{ car.car_date || '-'}}</td>
                 </tr>
               </tbody>
             </table>
@@ -235,29 +236,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
+                <tr *ngFor="let address of detail_data.addresses; index as k"
                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  <td class="px-6 py-4 text-center">Rumah Ibu</td>
+                  <td class="px-6 py-4 text-center">{{ address.title || '-' }}</td>
                   <td class="px-6 py-4 text-center">
-                    <a href="https://maps.app.goo.gl/k1jYd5w9ShKKbfPJA?g_st=ac">
-                      Gg. H. Abdurahman II No.23, Campaka, Kec. Andir, Kota
-                      Bandung, Jawa Barat 40184</a
-                    >
+                    <a href="https://maps.app.goo.gl/k1jYd5w9ShKKbfPJA?g_st=ac">{{ address.address || '-'}}</a>
                   </td>
-                  <td class="px-6 py-4 text-center">Rumah cat hijau</td>
-                </tr>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td class="px-6 py-4 text-center">Kantor</td>
-                  <td class="px-6 py-4 text-center">
-                    <a href="https://maps.app.goo.gl/5BpFpCNhUK6ZU3EG7">
-                      Jl. Soekarno Hatta No.104, Babakan Ciparay, Kec. Babakan
-                      Ciparay, Kota Bandung, Jawa Barat 40223</a
-                    >
-                  </td>
-                  <td class="px-6 py-4 text-center">Di parkiran saja</td>
+                  <td class="px-6 py-4 text-center">{{ address.description || '-'}}</td>
                 </tr>
               </tbody>
             </table>

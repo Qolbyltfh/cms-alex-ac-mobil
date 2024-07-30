@@ -1,7 +1,7 @@
 import { Component , OnInit} from '@angular/core';
 
 import { UsersService } from 'src/app/services/users.service';
-import { Users } from 'src/app/models/user-models';
+import { Users, User } from 'src/app/models/user-models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss']
 })
-export class CustomersComponent {
+export class CustomersComponent implements OnInit{
   isModalOpen = false; // Track modal open state
 
   // pagination
@@ -25,7 +25,7 @@ export class CustomersComponent {
   };
 
   //detail data
-  detail_data = {};
+  detail_data: User = {} as User;
 
   constructor(private userService: UsersService, private toastr: ToastrService) {
   }
@@ -57,12 +57,12 @@ export class CustomersComponent {
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
         } else {
-          this.toastr.warning('Tidak ada data', 'Peringatan!');
+          this.toastr.warning('No data found', 'Warning!');
         }
       },
       error: (err) => {
         console.error(err);
-        this.toastr.error('Gagal mendapatkan data', 'Kesalahan!');
+        this.toastr.error('Failed to get data', 'Error!');
       }
     });
   }
@@ -74,6 +74,7 @@ export class CustomersComponent {
   openModal(data: any) {
     this.isModalOpen = true;
     this.detail_data = data;
+    console.log(this.detail_data)
   }
 
   closeModal() {
