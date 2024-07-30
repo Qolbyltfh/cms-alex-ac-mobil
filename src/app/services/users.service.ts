@@ -59,6 +59,29 @@ export class UsersService {
     return this.http.get<ApiResponse>(url, { headers });
   }
 
+  getEmployee(payloadData: any): Observable<ApiResponse> {
+    // Retrieve token from local storage
+    let token = '';
+    if (localStorage.getItem('user')) {
+      const data = localStorage.getItem('user');
+      const parsedData = JSON.parse(data || '{}');
+      token = parsedData.data.token;
+    } else {
+      console.error('User data not found in local storage');
+    }
+  
+    // Set headers with Authorization token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    // Construct the URL with multiple parameters
+    const url = `${this.base_URL}/users?limit=${payloadData.limit}&offset=${payloadData.offset}&roles=admin,mechanic`;
+
+    // Make the HTTP GET request with headers
+    return this.http.get<ApiResponse>(url, { headers });
+  }
+
   getListCompanyWorkbrench(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.base_URL}/carshops`);
   }
