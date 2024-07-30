@@ -5,6 +5,13 @@ export interface Users {
     phone?: string;
     password?: string;
     role_id?: string;
+    roles?: {
+      id: string;
+      name: string;
+      deletedAt?: string | null;
+      createdAt: string;
+      updatedAt: string;
+    };
     company_branch_id?: string;
     image?: string;
     status?: string;
