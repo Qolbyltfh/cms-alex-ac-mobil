@@ -15,6 +15,7 @@ import { AdministratorComponent } from './pages/administrator/administrator.comp
 import { EmployeeComponent } from './pages/employee/employee.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-workbrench.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
     component: MainComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
       {
         path: 'blank',
         component: BlankComponent

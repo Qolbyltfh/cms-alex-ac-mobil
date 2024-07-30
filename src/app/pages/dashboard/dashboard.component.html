@@ -1,0 +1,63 @@
+<div class="p-4 sm:ml-64 bg-gray-50 min-h-screen">
+    <div class="p-4 mt-16">
+      <div class="relative overflow-x-auto sm:rounded-lg bg-white border border-gray-200 rounded-lg shadow p-6">
+        <h4 class="text-2xl font-bold dark:text-white mb-4">Dashboard</h4>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <div class="text-4xl font-bold">50</div>
+              <div class="text-sm">Total Order</div>
+              <div class="text-xs text-gray-500">1 bulan terakhir</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="text-4xl font-bold">150</div>
+              <div class="text-sm">Total Customer</div>
+              <div class="text-xs text-gray-500">terdaftar</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="text-4xl font-bold">Rp.100.000</div>
+              <div class="text-sm">Total Penghasilan</div>
+              <div class="text-xs text-gray-500">1 bulan terakhir</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="text-4xl font-bold">50</div>
+              <div class="text-sm">Total Customer Baru</div>
+              <div class="text-xs text-gray-500">1 bulan terakhir</div>
+            </div>
+          </div>
+          
+        
+        <div class="min-w-full">
+            <h5 class="font-semibold mb-2">Total Penghasilan</h5>
+            <div class="chart-container">
+                <canvas #chartCanvas></canvas>
+            </div>
+        </div>
+       
+  
+        <h5 class="mt-8 mb-2 font-semibold">Total Penghasilan Berdasarkan Lokasi</h5>
+        <table class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border-b-2 border-gray-200">NAMA CABANG</th>
+              <th class="px-4 py-2 border-b-2 border-gray-200">KODE CABANG</th>
+              <th class="px-4 py-2 border-b-2 border-gray-200">ALAMAT</th>
+              <th class="px-4 py-2 border-b-2 border-gray-200">TOTAL ORDER</th>
+              <th class="px-4 py-2 border-b-2 border-gray-200">TOTAL PENGHASILAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-4 py-2 border-b">-</td>
+              <td class="px-4 py-2 border-b">-</td>
+              <td class="px-4 py-2 border-b">-</td>
+              <td class="px-4 py-2 border-b">-</td>
+              <td class="px-4 py-2 border-b">-</td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

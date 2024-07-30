@@ -26,6 +26,7 @@ import { EmployeeComponent } from './pages/employee/employee.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { CompanyWorkbrenchComponent } from './pages/company-workbrench/company-workbrench.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     EmployeeComponent,
     OrdersComponent,
     CompanyWorkbrenchComponent,
-    PaginationComponent
+    PaginationComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
