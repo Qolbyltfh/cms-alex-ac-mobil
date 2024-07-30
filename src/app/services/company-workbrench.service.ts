@@ -35,10 +35,6 @@ export class CompanyWorkbrenchService {
     return this.http.put(`${this.base_URL}/carshops/${id}`, data, httpOptions);
   }
 
-  uploadImage(data: any) {
-    return this.http.post(`${this.base_URL}/utils/upload/image`, data);
-  }
-
   deleteCompanyWOrkbrench(id: string) {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })

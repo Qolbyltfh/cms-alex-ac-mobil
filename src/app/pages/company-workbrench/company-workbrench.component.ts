@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CompanyWorkbrenchService } from 'src/app/services/company-workbrench.service';
+import { ConstantService } from 'src/app/services/constant.service';
 
 import { CompanyWorkbrench, ApiResponse } from 'src/app/models/api-models';
 import { Helpers } from '../../helpers/helpers';
@@ -37,7 +38,7 @@ export class CompanyWorkbrenchComponent implements OnInit{
     offset: 0
   };
 
-  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService, private helpers: Helpers, private toastr: ToastrService) {
+  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService, private masterService: ConstantService, private helpers: Helpers, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -204,7 +205,7 @@ export class CompanyWorkbrenchComponent implements OnInit{
       const formData = new FormData();
       formData.append('file', file);
 
-      this.companyworkbrenchService.uploadImage(formData).subscribe({
+      this.masterService.uploadImage(formData).subscribe({
         next: (res: any) => {
           if (res.status) {
             // Store the image URL in the form control

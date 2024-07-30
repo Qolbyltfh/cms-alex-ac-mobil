@@ -70,4 +70,35 @@ export class UsersService {
     // Make the HTTP GET request with headers and params
     return this.http.get<ApiResponse>(`${this.base_URL}/users`, options);
   }
+
+  getListCompanyWorkbrench(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.base_URL}/carshops`);
+  }
+
+  createUser(data: any) {
+    // Retrieve token from local storage
+    let token = '';
+    if (localStorage.getItem('user')) {
+      const data = localStorage.getItem('user');
+      const parsedData = JSON.parse(data || '{}');
+      token = parsedData.data?.token || '';
+    } else {
+      console.error('User data not found in local storage');
+    }
+  
+    // Set headers with Authorization token and Content-Type
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  
+    // Options including headers
+    const options = {
+      headers: headers
+    };
+  
+    // Send POST request
+    return this.http.post(`${this.base_URL}/users`, data, options);
+  }
+  
 }

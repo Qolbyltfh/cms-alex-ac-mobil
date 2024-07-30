@@ -24,4 +24,9 @@ export class ConstantService {
   getOrderStatus(): Observable<ApiResponse> {  
     return this.http.get<ApiResponse>(`${this.base_URL}/master/order-status`);
   }
+  
+  uploadImage(data: any) {
+    return this.http.post(`${this.base_URL}/utils/upload/image`, data);
+  }
+
 }

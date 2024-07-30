@@ -22,9 +22,9 @@ export interface Users {
     updatedAt: string;
 }
 
-interface Role {
+export interface Role {
     id: string;
-    name: string;
+    name?: string;
     deletedAt: Date | null;
     createdAt: string;
     updatedAt: string;
