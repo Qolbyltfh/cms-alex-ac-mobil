@@ -14,9 +14,6 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   getCustomers(payloadData: any): Observable<ApiResponse> {
-    // Initialize HttpParams
-    let param = new HttpParams().set('role', 'customer');
-  
     // Retrieve token from local storage
     let token = '';
     if (localStorage.getItem('user')) {
@@ -32,20 +29,14 @@ export class UsersService {
       'Authorization': `Bearer ${token}`
     });
   
-    // Options including params and headers
-    const options = {
-      params: param,
-      headers: headers
-    };
-  
-    // Make the HTTP GET request with headers and params
-    return this.http.get<ApiResponse>(`${this.base_URL}/users`, options);
+    // Construct the URL with multiple parameters
+    const url = `${this.base_URL}/users?limit=${payloadData.limit}&offset=${payloadData.offset}&roles=customer`;
+
+    // Make the HTTP GET request with headers
+    return this.http.get<ApiResponse>(url, { headers });
   }
 
   getAdministrator(payloadData: any): Observable<ApiResponse> {
-    // Initialize HttpParams
-    let param = new HttpParams().set('role', 'superadmin,supervisor');
-  
     // Retrieve token from local storage
     let token = '';
     if (localStorage.getItem('user')) {
@@ -61,14 +52,11 @@ export class UsersService {
       'Authorization': `Bearer ${token}`
     });
   
-    // Options including params and headers
-    const options = {
-      params: param,
-      headers: headers
-    };
-  
-    // Make the HTTP GET request with headers and params
-    return this.http.get<ApiResponse>(`${this.base_URL}/users`, options);
+    // Construct the URL with multiple parameters
+    const url = `${this.base_URL}/users?limit=${payloadData.limit}&offset=${payloadData.offset}&roles=superadmin,supervisor`;
+
+    // Make the HTTP GET request with headers
+    return this.http.get<ApiResponse>(url, { headers });
   }
 
   getListCompanyWorkbrench(): Observable<ApiResponse> {
@@ -99,6 +87,32 @@ export class UsersService {
   
     // Send POST request
     return this.http.post(`${this.base_URL}/users`, data, options);
+  }
+
+  updateUser(data: any, id: any) {
+    // Retrieve token from local storage
+    let token = '';
+    if (localStorage.getItem('user')) {
+      const data = localStorage.getItem('user');
+      const parsedData = JSON.parse(data || '{}');
+      token = parsedData.data?.token || '';
+    } else {
+      console.error('User data not found in local storage');
+    }
+  
+    // Set headers with Authorization token and Content-Type
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  
+    // Options including headers
+    const options = {
+      headers: headers
+    };
+  
+    // Send PUT request
+    return this.http.put(`${this.base_URL}/users/${id}`, data, options);
   }
   
 }

@@ -7,6 +7,7 @@ import { Users, Role } from 'src/app/models/user-models';
 import { CompanyWorkbrench } from 'src/app/models/api-models';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
+import * as bcrypt from 'bcryptjs';
 @Component({
   selector: 'app-administrator',
   templateUrl: './administrator.component.html',
@@ -117,42 +118,7 @@ export class AdministratorComponent implements OnInit{
     this.isModalOpen = !this.isModalOpen;
   }
 
-  openModal(type: string, data: any) {
-    this.title = type;
-    this.isModalOpen = true;
-    this.detail_data = data;
-    this.getRoles();
-    this.getCompanyWorkbrench();
-    this.createForm();
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-  }
-
-  onSubmit(type: string): void {
-    this.formUA.markAllAsTouched();
-    if (this.formUA.valid) {
-      let payloadData = this.helpers.copyObject(this.formUA.getRawValue());
-      payloadData.status = 'active;'
-
-      if (type === 'create'){
-        this.userService.createUser(payloadData).subscribe({
-          next: (res) => {
-            this.closeModal();
-            this.getAdministrator(1);
-            console.log('User updated successfully', res);
-            this.toastr.success('Successfully added data', 'Berhasil!');
-          },
-          error: (err) => {
-            console.error('Error updating User', err);
-            this.toastr.error('Failed to added data', 'Kesalahan!');
-          }
-        });
-      }
-    }
-  }
-
+  
   createForm() {
     this.formUA = new FormGroup({
       id: new FormControl(null),
@@ -166,8 +132,71 @@ export class AdministratorComponent implements OnInit{
     });
   }
 
-  get f() { return this.formUA.controls; };
 
+  openModal(type: string, data: any) {
+    this.title = type;
+    this.tempImage = '';
+    this.getRoles();
+    this.getCompanyWorkbrench();
+    this.createForm();
+    if (type === 'edit'){
+      this.isEdit = true;
+      this.id_detail = data.id;
+      this.detail_data = data;
+      this.formUA.patchValue(this.detail_data);
+      const formData = this.formUA.value;
+      if (formData.password) {
+        // Hash the password using bcrypt
+        const salt = bcrypt.genSaltSync(10);
+        formData.password = bcrypt.hashSync(formData.password, salt);
+      }
+      this.tempImage = data.image;
+    }
+
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  onSubmit(type: string): void {
+    this.formUA.markAllAsTouched();
+    if (this.formUA.valid) {
+      let payloadData = this.helpers.copyObject(this.formUA.getRawValue());
+      payloadData.status = 'active'
+
+      if (!this.isEdit){
+        this.userService.createUser(payloadData).subscribe({
+          next: (res) => {
+            this.closeModal();
+            this.getAdministrator(1);
+            console.log('User updated successfully', res);
+            this.toastr.success('Successfully added data', 'Berhasil!');
+          },
+          error: (err) => {
+            console.error('Error updating User', err);
+            this.toastr.error('Failed to added data', 'Kesalahan!');
+          }
+        });
+      } else {
+        this.userService.updateUser(payloadData, this.id_detail).subscribe({
+          next: (res) => {
+            this.closeModal();
+            this.getAdministrator(1);
+            console.log('User updated successfully', res);
+            this.toastr.success('Successfully updated data', 'Berhasil!');
+          },
+          error: (err) => {
+            console.error('Error updating User', err);
+            this.toastr.error('Failed to updated data', 'Kesalahan!');
+          }
+        });
+      }
+    }
+  }
+
+  get f() { return this.formUA.controls; };
 
   checkNumberList(index: any) {
     return Number(index) + ((this.config.currentPage - 1) * this.config.limit) + 1
