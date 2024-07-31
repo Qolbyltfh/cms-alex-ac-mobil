@@ -21,4 +21,12 @@ export class OrderService {
   getOrderDetail(id: any): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.base_URL}/orders/detail/${id}`);
   }
+
+  updateOrder(data: any, id: any) {
+    return this.http.put(`${this.base_URL}/orders/${id}/status`, data);
+  }
+
+  updateOrderItem(data: any) {
+    return this.http.post(`${this.base_URL}/orders/items`, data);
+  }
 }

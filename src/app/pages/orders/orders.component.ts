@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Order, OrderDetail } from 'src/app/models/api-models';
+import { Order, OrderDetail, OrderStatus, OrderItem } from 'src/app/models/api-models';
 import { OrderService } from 'src/app/services/order.service';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { ConstantService } from 'src/app/services/constant.service';
 
 @Component({
   selector: 'app-orders',
@@ -18,17 +19,8 @@ export class OrdersComponent implements OnInit{
   isModalOpenDetail = false; // Track modal open state
 
   title = '';
-  statusOptions = [
-    { value: '', name: 'Filter by status' },
-    { value: 'pending', name: 'Pending' },
-    { value: 'pickup', name: 'Pick Up' },
-    { value: 'cheking', name: 'Cheking' },
-    { value: 'cheking-confirmation', name: 'Cheking Confirmation' },
-    { value: 'inprogress', name: 'In Progress' },
-    { value: 'delivery', name: 'Delivery' },
-    { value: 'waiting-payment', name: 'Waiting Payment' },
-    { value: 'complete', name: 'Complete' },
-  ];
+  statusOptions: OrderStatus[] = [];
+
   mechanicOptions = [
     { value: '', name: 'Select Mechanic' },
     { value: 'mechanic1', name: 'Kevin' },
@@ -54,9 +46,9 @@ export class OrdersComponent implements OnInit{
 
   // detail order
   detail_order: OrderDetail = {};
+  id_order= null;
 
-
-  constructor(private fb: FormBuilder, private orderService: OrderService, private toastr: ToastrService, private helpers: Helpers) {
+  constructor(private fb: FormBuilder, private orderService: OrderService,private masterService: ConstantService, private toastr: ToastrService, private helpers: Helpers) {
     this.form = this.fb.group({
       status: [''],
       description: [''],
@@ -66,16 +58,25 @@ export class OrdersComponent implements OnInit{
 
   ngOnInit(): void {
       this.getOrders(1);
+      this.getOrderStatus();
   }
 
   openModal(type: string, id: any) {
     this.title = this.getFormattedTitle(type);
+    this.id_order = id;
+    this.getOrderDetail(this.id_order);
 
     if (type === 'detail_order'){
       this.isModalOpenDetail = true;
-      this.getOrderDetail(id);
-    } else {
+    } 
+    
+    else {
       this.isModalOpen = true;
+      // Watch for status changes to update form fields
+      this.form.get('status')?.valueChanges.subscribe((value) => {
+        this.selectedStatus = value;
+        this.updateValidators();
+      });
     }
     this.addItem();
   }
@@ -98,12 +99,22 @@ export class OrdersComponent implements OnInit{
 
   addItem(): void {
     const itemForm = this.fb.group({
-      item: [''],
-      price: [0, [Validators.min(0)]],
-      qty: [1, [Validators.min(1)]]
+      name: [''],  // Require item name
+      price: [0, [Validators.min(0)]],  // Require price to be non-negative
+      quantity: [1, [Validators.min(1)]]  // Require quantity to be at least 1
     });
 
     this.items.push(itemForm);
+  }
+
+  updateValidators(): void {
+    // Update validators based on selected status
+    if (this.selectedStatus === 'waiting-payment') {
+      this.form.get('description')?.setValidators([Validators.required]);
+    } else {
+      this.form.get('description')?.clearValidators();
+    }
+    this.form.get('description')?.updateValueAndValidity();
   }
 
   removeItem(index: number): void {
@@ -120,7 +131,45 @@ export class OrdersComponent implements OnInit{
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log(this.form.value);
+      // Get a copy of the form values
+      let payloadData = this.helpers.copyObject(this.form.getRawValue());
+  
+      // TypeScript type assertion to specify payloadData.items as an array of OrderItem
+      (payloadData.items as OrderItem[]).forEach((item) => {
+        // Transform each item to the required structure
+        const itemPayload = {
+          name: item.name, // Assuming 'item' key maps to 'name'
+          price: Number(item.price), // Ensure price is a number
+          quantity: item.quantity,
+          order_id: this.id_order, // Assuming this.id_order is defined
+        };
+  
+        // Send the update request for each item
+        this.orderService.updateOrderItem(itemPayload).subscribe({
+          next: (res) => {
+            console.log('Order item updated successfully', res);
+            this.toastr.success('Successfully updated item data', 'Berhasil!');
+          },
+          error: (err) => {
+            console.error('Error updating Order item', err);
+            this.toastr.error('Failed to update item data', 'Kesalahan!');
+          }
+        });
+      });
+  
+      // Update the entire order after updating items
+      this.orderService.updateOrder(payloadData, this.id_order).subscribe({
+        next: (res) => {
+          this.closeModal();
+          this.getOrders(1);
+          console.log('Order updated successfully', res);
+          this.toastr.success('Successfully updated order data', 'Berhasil!');
+        },
+        error: (err) => {
+          console.error('Error updating Order', err);
+          this.toastr.error('Failed to update order data', 'Kesalahan!');
+        }
+      });
     }
   }
 
@@ -159,14 +208,14 @@ export class OrdersComponent implements OnInit{
   }
 
   // detail
-  getOrderDetail(id: string): void {
+  getOrderDetail(id: any): void {
     this.orderService.getOrderDetail(id).subscribe({
       next: (res) => {
         if (res) {
-          console.log(res)
           this.detail_order = res.data as OrderDetail;
           this.detail_order.service_at = this.reformatDate(this.detail_order.service_at);
           this.detail_order.createdAt = this.reformatDate(this.detail_order.createdAt);
+          this.form.patchValue(this.detail_order);
         } else {
           this.toastr.warning('No data found', 'Warning!');
         }
@@ -176,6 +225,20 @@ export class OrdersComponent implements OnInit{
         this.toastr.error('Failed to get data', 'Error!');
       }
     });
+  }
+
+  // get list status
+  getOrderStatus(): void {
+    this.masterService.getOrderStatus().subscribe({
+      next:(res) => {
+        if (res){
+          this.statusOptions = res.data as OrderStatus[];
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
   }
 
   checkNumberList(index: any) {

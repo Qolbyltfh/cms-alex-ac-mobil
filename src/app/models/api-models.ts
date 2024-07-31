@@ -104,3 +104,8 @@ export interface OrderItem {
   createdAt?: string | null;
   updatedAt?: string | null;
 }
+
+export interface OrderStatus {
+  label?: string;
+  value?: string;
+}
