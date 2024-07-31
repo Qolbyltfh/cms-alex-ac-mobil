@@ -71,9 +71,9 @@ export class EmployeeComponent implements OnInit{
             deletedAt: role.deletedAt ? new Date(role.deletedAt) : null
           }));
 
-          // Filter list_role to include only 'superadmin' and 'supervisor'
+          // Filter list_role to include only 'mechanic' and 'admin'
           const filteredRoles = this.list_role.filter(role => 
-            role.name === 'superadmin' || role.name === 'supervisor'
+            role.name === 'mechanic' || role.name === 'admin'
           );
 
           // Alternatively, store filtered roles in a class property if needed elsewhere

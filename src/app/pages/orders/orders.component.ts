@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { Order } from 'src/app/models/api-models';
+import { OrderService } from 'src/app/services/order.service';
+import { Helpers } from '../../helpers/helpers';
+import { ToastrService } from 'ngx-toastr';
+import { Moment } from 'moment';
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -33,7 +40,19 @@ export class OrdersComponent implements OnInit{
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  // pagination
+  list_data: Order[] = [];
+  currentPage: number = 1;
+  totalPages: any;
+  pages: number[] = [];
+  config = {
+    limit: 10, // Jumlah item per halaman
+    currentPage: 1,
+    total: 0,
+    offset: 0
+  };
+
+  constructor(private fb: FormBuilder, private orderService: OrderService, private toastr: ToastrService, private helpers: Helpers) {
     this.form = this.fb.group({
       status: [''],
       description: [''],
@@ -42,7 +61,7 @@ export class OrdersComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      
+      this.getOrders(1);
   }
 
   openModal(type: string, id: any) {
@@ -98,5 +117,55 @@ export class OrdersComponent implements OnInit{
     if (this.form.valid) {
       console.log(this.form.value);
     }
+  }
+
+  getOrders(page: number): void {
+    const payloadListData = {
+      limit: this.config.limit,
+      offset: (page - 1) * this.config.limit
+    };
+
+    this.orderService.getOrders(payloadListData).subscribe({
+      next: (res) => {
+        if (res) {
+          this.list_data = res.data;
+          this.config = {
+            currentPage: res.meta.currentPage,
+            total: res.meta.total,
+            limit: res.meta.limit,
+            offset: res.meta.offset
+          };
+          this.list_data.forEach(obj => {
+            obj.createdAt = this.reformatDate(obj.createdAt);
+            obj.service_at = this.reformatDate(obj.service_at);
+            obj.updatedAt = this.reformatDate(obj.updatedAt);
+          });
+          this.totalPages = Math.ceil(this.config.total / this.config.limit);
+          this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        } else {
+          this.toastr.warning('No data found', 'Warning!');
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to get data', 'Error!');
+      }
+    });
+  }
+
+  checkNumberList(index: any) {
+    return Number(index) + ((this.config.currentPage - 1) * this.config.limit) + 1
+  }
+
+  reformatDate(data: any) {
+    let formatedDate;
+    if (data) {
+      formatedDate = moment(data, "YYYY-MM-DD HH:mm:ss", true).isValid()
+        ? moment(data, "YYYY-MM-DD HH:mm:ss", true).format('DD MMM YYYY, HH:mm:ss') 
+        : moment(data).format('DD MMM YYYY');
+    } else {
+      formatedDate = null;
+    }
+    return formatedDate;
   }
 }
