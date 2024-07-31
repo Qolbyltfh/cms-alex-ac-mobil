@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Order } from 'src/app/models/api-models';
+import { Order, OrderDetail } from 'src/app/models/api-models';
 import { OrderService } from 'src/app/services/order.service';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
@@ -52,6 +52,10 @@ export class OrdersComponent implements OnInit{
     offset: 0
   };
 
+  // detail order
+  detail_order: OrderDetail = {};
+
+
   constructor(private fb: FormBuilder, private orderService: OrderService, private toastr: ToastrService, private helpers: Helpers) {
     this.form = this.fb.group({
       status: [''],
@@ -69,6 +73,7 @@ export class OrdersComponent implements OnInit{
 
     if (type === 'detail_order'){
       this.isModalOpenDetail = true;
+      this.getOrderDetail(id);
     } else {
       this.isModalOpen = true;
     }
@@ -142,6 +147,26 @@ export class OrdersComponent implements OnInit{
           });
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        } else {
+          this.toastr.warning('No data found', 'Warning!');
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to get data', 'Error!');
+      }
+    });
+  }
+
+  // detail
+  getOrderDetail(id: string): void {
+    this.orderService.getOrderDetail(id).subscribe({
+      next: (res) => {
+        if (res) {
+          console.log(res)
+          this.detail_order = res.data as OrderDetail;
+          this.detail_order.service_at = this.reformatDate(this.detail_order.service_at);
+          this.detail_order.createdAt = this.reformatDate(this.detail_order.createdAt);
         } else {
           this.toastr.warning('No data found', 'Warning!');
         }

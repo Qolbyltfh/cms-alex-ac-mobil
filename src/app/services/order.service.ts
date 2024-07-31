@@ -17,4 +17,8 @@ export class OrderService {
 
     return this.http.get<ApiResponse>(`${this.base_URL}/orders`, options);
   }
+
+  getOrderDetail(id: any): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.base_URL}/orders/detail/${id}`);
+  }
 }
