@@ -29,4 +29,8 @@ export class OrderService {
   updateOrderItem(data: any) {
     return this.http.post(`${this.base_URL}/orders/items`, data);
   }
+
+  updateMechanic(data: any, id: any) {
+    return this.http.put(`${this.base_URL}/orders/${id}/mechanic`, data);
+  }
 }

@@ -295,7 +295,7 @@
           </div>
         </div>
 
-        <div *ngIf="title === 'assign mechanic'">
+        <div *ngIf="isAssign">
           <div class="grid gap-4 mb-4 grid-cols-2">
             <div class="col-span-2">
               <label
@@ -305,11 +305,13 @@
               >
               <select
                 id="mechanic-update"
+                formControlName="mechanic"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               >
+                <option value="" selected>Select Mechanic</option>
                 <option
                   *ngFor="let mechanic of mechanicOptions"
-                  [value]="mechanic.value"
+                  [value]="mechanic.id"
                 >
                   {{ mechanic.name }}
                 </option>
