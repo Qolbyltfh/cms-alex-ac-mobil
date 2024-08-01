@@ -6,6 +6,9 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,9 @@ export class AccountService {
 
   constructor(
       private router: Router,
-      private http: HttpClient
+      private http: HttpClient,     
+      private toastr: ToastrService,
+      private spinner: NgxSpinnerService
   ) {
       this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
       this.user = this.userSubject.asObservable();
@@ -42,5 +47,7 @@ export class AccountService {
       localStorage.removeItem('user');
       this.userSubject.next(null);
       this.router.navigate(['/login']);
+      this.spinner.hide();
+      this.toastr.success('Logout Success', 'Berhasil!');
   }
 }

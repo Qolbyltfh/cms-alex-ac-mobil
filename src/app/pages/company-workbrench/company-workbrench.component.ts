@@ -329,19 +329,26 @@ export class CompanyWorkbrenchComponent implements OnInit{
   }
 
   delete(){
+    this.spinner.show();
+
     this.companyworkbrenchService.deleteCompanyWOrkbrench(this.id_detail).subscribe({
       next: (res) => {
         this.closeConfirm();
         this.getCompanyWorkbrenches(1);
         console.log('Company Workbrench deleted successfully', res);
         this.toastr.success('Successfully deleted data', 'Success!');
+        this.spinner.hide();
+
       },
       error: (err) => {
         console.error('Error updating Company Workbrench', err);
         this.toastr.error('Failed to update data', 'Error!');
-
+        this.spinner.hide();
+        
       }
     });
+    this.spinner.hide();
+
   }
   
 }

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { AccountService } from 'src/app/services';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +14,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private spinner: NgxSpinnerService,
+    private accountService: AccountService
   ) {
     
   }
@@ -24,8 +29,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(){
-    // redirect to login page
-    this.router.navigate(['/login']);
-
+    this.spinner.show();
+    this.accountService.logout();
   }
 }
