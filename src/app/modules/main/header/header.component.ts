@@ -11,6 +11,9 @@ import { AccountService } from 'src/app/services';
 })
 export class HeaderComponent implements OnInit {
   isDropdownOpen = false;
+  name = '';
+  email = '';
+  image = '';
 
   constructor(
     private router: Router,
@@ -21,7 +24,13 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if (localStorage.getItem('user')){
+      const data = localStorage.getItem('user');
+      const parsedData = JSON.parse(data || '{}');
+      this.name = parsedData.data.name;
+      this.email = parsedData.data.email;
+      this.image = parsedData.data.image;
+    }
   }
 
   toggleDropdown() {
