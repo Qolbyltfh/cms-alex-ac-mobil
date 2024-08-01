@@ -109,3 +109,17 @@ export interface OrderStatus {
   label?: string;
   value?: string;
 }
+
+export interface Dashboard {
+  platform: string;
+  total_price_by_month: number[];
+  total_order_this_month: number;
+  total_income_this_month: number | null;
+  total_income: number | null;
+  branch_data: any[]; // Define a more specific type if you know the structure of branch_data
+}
+
+export interface DashboardResponse {
+  status: boolean;
+  data: Dashboard;
+}

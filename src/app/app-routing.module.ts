@@ -24,6 +24,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'  // Use 'full' to ensure the redirect occurs when the path is exactly ''
+      },
+      {
         path: 'dashboard',
         component: DashboardComponent
       },

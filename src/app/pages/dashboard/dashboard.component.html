@@ -3,26 +3,20 @@
       <div class="relative overflow-x-auto sm:rounded-lg bg-white border border-gray-200 rounded-lg shadow p-6">
         <h4 class="text-2xl font-bold dark:text-white mb-4">Dashboard</h4>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
             <div class="flex flex-col items-center">
-              <div class="text-4xl font-bold">50</div>
+              <div class="text-4xl font-bold">{{ totalOrderThisMonth || '0' }}</div>
               <div class="text-sm">Total Order</div>
               <div class="text-xs text-gray-500">1 bulan terakhir</div>
             </div>
             <div class="flex flex-col items-center">
-              <div class="text-4xl font-bold">150</div>
-              <div class="text-sm">Total Customer</div>
-              <div class="text-xs text-gray-500">terdaftar</div>
-            </div>
-            <div class="flex flex-col items-center">
-              <div class="text-4xl font-bold">Rp.100.000</div>
+              <div class="text-4xl font-bold">{{ totalIncomeThisMonth || '0'}}</div>
               <div class="text-sm">Total Penghasilan</div>
               <div class="text-xs text-gray-500">1 bulan terakhir</div>
             </div>
             <div class="flex flex-col items-center">
-              <div class="text-4xl font-bold">50</div>
-              <div class="text-sm">Total Customer Baru</div>
-              <div class="text-xs text-gray-500">1 bulan terakhir</div>
+              <div class="text-4xl font-bold">{{ totalIncome || '0'}}</div>
+              <div class="text-sm">Total Penghasilan</div>
             </div>
           </div>
           
