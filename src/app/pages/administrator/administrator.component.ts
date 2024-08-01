@@ -45,9 +45,13 @@ export class AdministratorComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.getAdministrator(1);
+    this.getAdministrator(this.config.currentPage);
   }
   
+  onPageChange(page: number): void {
+    this.getAdministrator(page);
+  }
+
   getCompanyWorkbrench(): void {
     this.userService.getListCompanyWorkbrench().subscribe({
       next:(res) => {

@@ -109,7 +109,13 @@
             </tr>
           </tbody>
         </table>
-        <app-pagination></app-pagination>
+        <app-pagination
+          [currentPage]="config.currentPage"
+          [totalPages]="totalPages"
+          (pageChange)="onPageChange($event)"
+        >
+        </app-pagination>
+        
       </div>
     </div>
   </div>

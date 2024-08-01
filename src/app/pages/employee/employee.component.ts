@@ -86,6 +86,10 @@ export class EmployeeComponent implements OnInit{
     })
   }
 
+  onPageChange(page: number): void {
+    this.getEmployee(page);
+  }
+
   getEmployee(page: number): void {
     const payloadListData = {
       limit: this.config.limit,

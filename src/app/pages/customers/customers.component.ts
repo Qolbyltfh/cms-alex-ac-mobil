@@ -15,7 +15,7 @@ export class CustomersComponent implements OnInit{
   // pagination
   list_data: Users[] = [];
   currentPage: number = 1;
-  totalPages: any;
+  totalPages: number = 0;
   pages: number[] = [];
   config = {
     limit: 10, // Jumlah item per halaman
@@ -31,13 +31,17 @@ export class CustomersComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.getCustomers(1);
+    this.getCustomers(this.config.currentPage);
   }
 
   checkNumberList(index: any) {
     return Number(index) + ((this.config.currentPage - 1) * this.config.limit) + 1
   }
   
+  onPageChange(page: number): void {
+    this.getCustomers(page);
+  }
+
   getCustomers(page: number): void {
     const payloadListData = {
       limit: this.config.limit,

@@ -289,6 +289,10 @@ export class OrdersComponent implements OnInit{
     return Number(index) + ((this.config.currentPage - 1) * this.config.limit) + 1
   }
 
+  onPageChange(page: number): void {
+    this.getOrders(page);
+  }
+
   reformatDate(data: any) {
     let formatedDate;
     if (data) {
