@@ -17,6 +17,7 @@ import { ControlSidebarComponent } from './modules/main/control-sidebar/control-
 import {ToastrModule} from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSummernoteModule } from 'ngx-summernote';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // pages
 import { BlankComponent } from './pages/blank/blank.component';
@@ -53,6 +54,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     ReactiveFormsModule,
     NgxSummernoteModule,
     HttpClientModule,
+    NgxSpinnerModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',

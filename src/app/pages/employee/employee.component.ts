@@ -8,6 +8,8 @@ import { CompanyWorkbrench } from 'src/app/models/api-models';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
 import * as bcrypt from 'bcryptjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-employee',
@@ -42,7 +44,7 @@ export class EmployeeComponent implements OnInit{
   //detail data
   detail_data = {};
 
-  constructor(private userService: UsersService, private masterService: ConstantService, private fb: FormBuilder, private toastr: ToastrService, private helpers: Helpers) {
+  constructor(private userService: UsersService, private masterService: ConstantService, private fb: FormBuilder, private toastr: ToastrService, private helpers: Helpers, private spinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -91,6 +93,8 @@ export class EmployeeComponent implements OnInit{
   }
 
   getEmployee(page: number): void {
+    this.spinner.show();
+
     const payloadListData = {
       limit: this.config.limit,
       offset: (page - 1) * this.config.limit
@@ -108,13 +112,19 @@ export class EmployeeComponent implements OnInit{
           };
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('No data found', 'Warning!');
+          this.spinner.hide();
+
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Failed to get data', 'Error!');
+        this.spinner.hide();
+
       }
     });
   }
@@ -168,6 +178,8 @@ export class EmployeeComponent implements OnInit{
   onSubmit(type: string): void {
     this.formUA.markAllAsTouched();
     if (this.formUA.valid) {
+      this.spinner.show();
+
       let payloadData = this.helpers.copyObject(this.formUA.getRawValue());
       payloadData.status = 'active'
 
@@ -178,10 +190,14 @@ export class EmployeeComponent implements OnInit{
             this.getEmployee(1);
             console.log('User updated successfully', res);
             this.toastr.success('Successfully added data', 'Berhasil!');
+            this.spinner.hide();
+
           },
           error: (err) => {
             console.error('Error updating User', err);
             this.toastr.error('Failed to added data', 'Kesalahan!');
+            this.spinner.hide();
+
           }
         });
       } else {
@@ -191,10 +207,14 @@ export class EmployeeComponent implements OnInit{
             this.getEmployee(1);
             console.log('User updated successfully', res);
             this.toastr.success('Successfully updated data', 'Berhasil!');
+            this.spinner.hide();
+
           },
           error: (err) => {
             console.error('Error updating User', err);
             this.toastr.error('Failed to updated data', 'Kesalahan!');
+            this.spinner.hide();
+
           }
         });
       }

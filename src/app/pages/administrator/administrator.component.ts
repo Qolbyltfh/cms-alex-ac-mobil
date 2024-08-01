@@ -8,6 +8,8 @@ import { CompanyWorkbrench } from 'src/app/models/api-models';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
 import * as bcrypt from 'bcryptjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-administrator',
   templateUrl: './administrator.component.html',
@@ -41,7 +43,7 @@ export class AdministratorComponent implements OnInit{
   //detail data
   detail_data = {};
 
-  constructor(private userService: UsersService, private masterService: ConstantService, private fb: FormBuilder, private toastr: ToastrService, private helpers: Helpers) {
+  constructor(private userService: UsersService, private masterService: ConstantService, private fb: FormBuilder, private toastr: ToastrService, private helpers: Helpers, private spinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -90,6 +92,8 @@ export class AdministratorComponent implements OnInit{
   }
 
   getAdministrator(page: number): void {
+    this.spinner.show();
+
     const payloadListData = {
       limit: this.config.limit,
       offset: (page - 1) * this.config.limit
@@ -107,13 +111,20 @@ export class AdministratorComponent implements OnInit{
           };
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('No data found', 'Warning!');
+          this.spinner.hide();
+
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Failed to get data', 'Error!');
+        this.spinner.hide();
+
+        
       }
     });
   }

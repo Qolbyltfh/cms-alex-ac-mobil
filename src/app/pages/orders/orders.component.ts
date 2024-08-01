@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { ConstantService } from 'src/app/services/constant.service';
 import { UsersService } from 'src/app/services/users.service';
 import { Users } from 'src/app/models/user-models';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-orders',
@@ -46,7 +47,7 @@ export class OrdersComponent implements OnInit{
   detail_order: OrderDetail = {};
   id_order= null;
 
-  constructor(private fb: FormBuilder, private orderService: OrderService,private masterService: ConstantService, private userService: UsersService, private toastr: ToastrService, private helpers: Helpers) {
+  constructor(private fb: FormBuilder, private orderService: OrderService,private masterService: ConstantService, private userService: UsersService, private toastr: ToastrService, private helpers: Helpers, private spinner: NgxSpinnerService) {
     this.form = this.fb.group({
       status: [''],
       description: [''],
@@ -201,6 +202,8 @@ export class OrdersComponent implements OnInit{
   }
 
   getOrders(page: number): void {
+    this.spinner.show();
+
     const payloadListData = {
       limit: this.config.limit,
       offset: (page - 1) * this.config.limit
@@ -223,19 +226,27 @@ export class OrdersComponent implements OnInit{
           });
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('No data found', 'Warning!');
+          this.spinner.hide();
+
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Failed to get data', 'Error!');
+        this.spinner.hide();
+
       }
     });
   }
 
   // detail
   getOrderDetail(id: any): void {
+    this.spinner.show();
+
     this.orderService.getOrderDetail(id).subscribe({
       next: (res) => {
         if (res) {
@@ -243,13 +254,19 @@ export class OrdersComponent implements OnInit{
           this.detail_order.service_at = this.reformatDate(this.detail_order.service_at);
           this.detail_order.createdAt = this.reformatDate(this.detail_order.createdAt);
           this.form.patchValue(this.detail_order);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('No data found', 'Warning!');
+          this.spinner.hide();
+
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Failed to get data', 'Error!');
+        this.spinner.hide();
+
       }
     });
   }

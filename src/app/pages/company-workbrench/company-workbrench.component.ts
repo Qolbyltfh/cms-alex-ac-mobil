@@ -6,6 +6,7 @@ import { ConstantService } from 'src/app/services/constant.service';
 import { CompanyWorkbrench, ApiResponse } from 'src/app/models/api-models';
 import { Helpers } from '../../helpers/helpers';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class CompanyWorkbrenchComponent implements OnInit{
     offset: 0
   };
 
-  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService, private masterService: ConstantService, private helpers: Helpers, private toastr: ToastrService) {
+  constructor(private fb: FormBuilder, private companyworkbrenchService: CompanyWorkbrenchService, private masterService: ConstantService, private helpers: Helpers, private toastr: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -56,6 +57,8 @@ export class CompanyWorkbrenchComponent implements OnInit{
   }
   
   getCompanyWorkbrenches(page: number): void {
+    this.spinner.show();
+
     const payloadListData = {
       limit: this.config.limit,
       offset: (page - 1) * this.config.limit
@@ -73,13 +76,18 @@ export class CompanyWorkbrenchComponent implements OnInit{
           };
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('Tidak ada data', 'Peringatan!');
+          this.spinner.hide();
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Gagal mendapatkan data', 'Kesalahan!');
+        this.spinner.hide();
+
       }
     });
   }
@@ -226,6 +234,8 @@ export class CompanyWorkbrenchComponent implements OnInit{
   onSubmit(type: string): void {
     this.formCW.markAllAsTouched();
     if (this.formCW.valid) {
+      this.spinner.show();
+
       if (type === 'assign_holiday'){
 
       } else {
@@ -243,10 +253,14 @@ export class CompanyWorkbrenchComponent implements OnInit{
               this.getCompanyWorkbrenches(1);
               console.log('Company Workbrench updated successfully', res);
               this.toastr.success('Successfully added data', 'Berhasil!');
+              this.spinner.hide();
+
             },
             error: (err) => {
               console.error('Error updating Company Workbrench', err);
               this.toastr.error('Failed to added data', 'Kesalahan!');
+              this.spinner.hide();
+
             }
           });
         } else {
@@ -256,15 +270,20 @@ export class CompanyWorkbrenchComponent implements OnInit{
               this.getCompanyWorkbrenches(1);
               console.log('Company Workbrench updated successfully', res);
               this.toastr.success('Successfully updated data', 'Berhasil!');
+              this.spinner.hide();
+
             },
             error: (err) => {
               console.error('Error updating Company Workbrench', err);
               this.toastr.error('Failed to updated data', 'Kesalahan!');
+              this.spinner.hide();
 
             }
           });
         }
       }
+      this.spinner.hide();
+
     }
   }
 

@@ -3,6 +3,7 @@ import { Component , OnInit} from '@angular/core';
 import { UsersService } from 'src/app/services/users.service';
 import { Users, User } from 'src/app/models/user-models';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-customers',
@@ -27,7 +28,7 @@ export class CustomersComponent implements OnInit{
   //detail data
   detail_data: User = {} as User;
 
-  constructor(private userService: UsersService, private toastr: ToastrService) {
+  constructor(private userService: UsersService, private toastr: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -43,6 +44,8 @@ export class CustomersComponent implements OnInit{
   }
 
   getCustomers(page: number): void {
+    this.spinner.show();
+
     const payloadListData = {
       limit: this.config.limit,
       offset: (page - 1) * this.config.limit
@@ -60,13 +63,19 @@ export class CustomersComponent implements OnInit{
           };
           this.totalPages = Math.ceil(this.config.total / this.config.limit);
           this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+          this.spinner.hide();
+
         } else {
           this.toastr.warning('No data found', 'Warning!');
+          this.spinner.hide();
+
         }
       },
       error: (err) => {
         console.error(err);
         this.toastr.error('Failed to get data', 'Error!');
+        this.spinner.hide();
+
       }
     });
   }
