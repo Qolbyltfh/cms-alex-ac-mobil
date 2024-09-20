@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // helpers
 import { AuthGuard } from './helpers/auth.guard';
+import { RoleGuard } from './helpers/role.guard';
 
 // main
 import { MainComponent } from './modules/main/main.component';
